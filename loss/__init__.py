@@ -1,3 +1,3 @@
-__all__ = ['DCL']
+__all__ = ['DCL', 'DCLW']
 
-from loss.dcl import DCL
+from loss.dcl import DCL, DCLW
