@@ -29,4 +29,9 @@ loss = loss_fn(output, output)  # loss = tensor(38.8402, grad_fn=<AddBackward0>)
 
 ## Results
 
-Will be added shortly.
+| Loss          | 32 Batch Size | 64 Batch Size |
+| ------------- | ------------- | ------------- |
+| Cross Entropy | 78.3          | 81.47         |
+| DCL           | 84.6          | 85.57         |
+| DCLW          | 83.32         | 82.68         |
+
