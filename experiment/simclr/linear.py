@@ -95,7 +95,7 @@ def run_test():
         results['test_acc@5'].append(test_acc_5)
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        output_name = os.splitext(os.split(args.model_path)[1])[0]
+        output_name = os.path.splitext(os.path.split(args.model_path)[1])[0]
         data_frame.to_csv(f'results/{output_name}_linear_statistics.csv', index_label='epoch')
         if test_acc_1 > best_acc:
             best_acc = test_acc_1

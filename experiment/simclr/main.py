@@ -129,7 +129,7 @@ def run_train():
 
     # training loop
     results = {'train_loss': [], 'test_acc@1': [], 'test_acc@5': []}
-    save_name_pre = '{}_{}_{}_{}_{}'.format(feature_dim, temperature, k, batch_size, epochs)
+    save_name_pre = '{}_{}_{}_{}_{}_{}'.format(feature_dim, temperature, k, batch_size, epochs, args.loss)
     if not os.path.exists('results'):
         os.mkdir('results')
     best_acc = 0.0

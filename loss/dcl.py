@@ -42,5 +42,5 @@ class DCLW(DCL):
     temperature: temperature to control the sharpness of the distribution
     """
     def __init__(self, sigma=0.5, temperature=0.1):
-        weight_fn = lambda z1, z2: 2 - torch.nn.functional.softmax((z1 * z2).sum(dim=1) / sigma, dim=0).squeeze()
+        weight_fn = lambda z1, z2: 2 - z1.size(0) * torch.nn.functional.softmax((z1 * z2).sum(dim=1) / sigma, dim=0).squeeze()
         super(DCLW, self).__init__(weight_fn=weight_fn, temperature=temperature)
