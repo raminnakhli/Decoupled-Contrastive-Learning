@@ -47,7 +47,7 @@ Below are the SimCLR results of the Resnet18 on the CIFAR10 dataset. The tempera
 | ------------- | ------------- | ------------- | -------------- | -------------- |
 | Cross Entropy | 78.3          | 81.47         | 83.09          | 83.26          |
 | DCL           | 84.6          | 85.57         | 85.63          | 85.36          |
-| DCLW          | 83.32         | 82.68         |                |                |
+| DCLW          | 83.32         | 82.68         | 83.5           | 82.7           |
 
 ## Credits
 
