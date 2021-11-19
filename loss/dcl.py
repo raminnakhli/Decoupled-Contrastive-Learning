@@ -16,23 +16,21 @@ class DCL(object):
         self.temperature = temperature
         self.weight_fn = weight_fn
 
-    def _one_way_loss(self, z1, z2):
+    def __call__(self, z1, z2):
         """
         Calculate one way DCL loss
         :param z1: first embedding vector
         :param z2: second embedding vector
         :return: one-way loss
         """
-        positive_loss = -(z1 * z2).sum(dim=1) / self.temperature
+        cross_view_distance = torch.mm(z1, z2.t())
+        positive_loss = -torch.diag(cross_view_distance) / self.temperature
         if self.weight_fn is not None:
             positive_loss = positive_loss * self.weight_fn(z1, z2)
-        neg_similarity = torch.cat((torch.mm(z1, z1.t()), torch.mm(z1, z2.t())), dim=1) / self.temperature
+        neg_similarity = torch.cat((torch.mm(z1, z1.t()), cross_view_distance), dim=1) / self.temperature
         neg_mask = torch.eye(z1.size(0), device=z1.device).repeat(1, 2)
         negative_loss = torch.logsumexp(neg_similarity + neg_mask * SMALL_NUM, dim=1, keepdim=False)
         return (positive_loss + negative_loss).mean()
-
-    def __call__(self, z1, z2):
-        return self._one_way_loss(z1, z2) + self._one_way_loss(z2, z1)
 
 
 class DCLW(DCL):

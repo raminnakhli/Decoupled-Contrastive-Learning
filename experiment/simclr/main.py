@@ -25,10 +25,10 @@ def train(net, data_loader, train_optimizer, args, epoch):
         feature_2, out_2 = net(pos_2)
         if args.loss == 'dcl':
             l = DCL(temperature=args.temperature)
-            loss = l(out_1, out_2)
+            loss = l(out_1, out_2) + l(out_2, out_1)
         elif args.loss == 'dclw':
             l = DCLW(temperature=args.temperature)
-            loss = l(out_1, out_2)
+            loss = l(out_1, out_2) + l(out_2, out_1)
         elif args.loss == 'ce':
             # [2*B, D]
             out = torch.cat([out_1, out_2], dim=0)
