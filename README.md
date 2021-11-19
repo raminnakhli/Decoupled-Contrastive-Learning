@@ -33,6 +33,8 @@ You can simply `run_simclr.sh` to train and test the SimCLR.
 
 You can select different loss function by changing the `LOSS` variable in the same file. The valid value for this variable include `ce` for Cross-Entropy, `dcl` for Decoupled Contrastive Loss and `dclw` for Weighted Decoupled Contrastive Loss.
 
+The dataset can be selected by changing the `DATASET` variable as well. Valid values include `cifar10`, `cifar100`, and `stl10`.
+
 The final results can be seen in the output stream.
 
 Also, if you operate under Slurm, you can submit a job using `sbatch run_simclr.sh` and find the output file in the same directory.

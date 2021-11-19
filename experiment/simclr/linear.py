@@ -6,7 +6,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from torchvision.datasets import CIFAR10
+from torchvision.datasets.cifar import CIFAR10, CIFAR100
+from torchvision.datasets.stl10 import STL10
 from tqdm import tqdm
 
 from experiment.simclr import utils
@@ -60,18 +61,31 @@ def train_val(net, data_loader, train_optimizer, loss_criterion, epoch, epochs):
     return total_loss / total_num, total_correct_1 / total_num * 100, total_correct_5 / total_num * 100
 
 
+def select_dataset(dataset_name):
+    dataset_name = dataset_name.lower()
+    if dataset_name == 'cifar10':
+        return utils.create_pair_dataset(CIFAR10)
+    if dataset_name == 'cifar100':
+        return utils.create_pair_dataset(CIFAR100)
+    if dataset_name == 'stl10':
+        return utils.create_pair_dataset(STL10)
+    raise ValueError("Invalid dataset name")
+
+
 def run_test():
     parser = argparse.ArgumentParser(description='Linear Evaluation')
     parser.add_argument('--model_path', type=str, default='results/128_0.5_200_512_500_model.pth',
                         help='The pretrained model path')
     parser.add_argument('--batch_size', type=int, default=512, help='Number of images in each mini-batch')
     parser.add_argument('--epochs', type=int, default=100, help='Number of sweeps over the dataset to train')
+    parser.add_argument('--dataset', default='cifar10', type=str, help='dataset name: cifar10, cifar100, stl10')
 
     args = parser.parse_args()
     model_path, batch_size, epochs = args.model_path, args.batch_size, args.epochs
-    train_data = CIFAR10(root='data', train=True, transform=utils.train_transform, download=True)
+    dataset_class = select_dataset(args.dataset)
+    train_data = dataset_class(root='data', train=True, transform=utils.train_transform, download=True)
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=16, pin_memory=True)
-    test_data = CIFAR10(root='data', train=False, transform=utils.test_transform, download=True)
+    test_data = dataset_class(root='data', train=False, transform=utils.test_transform, download=True)
     test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=16, pin_memory=True)
 
     model = Net(num_class=len(train_data.classes), pretrained_path=model_path).cuda()
