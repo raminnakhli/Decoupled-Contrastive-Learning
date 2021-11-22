@@ -64,11 +64,11 @@ def train_val(net, data_loader, train_optimizer, loss_criterion, epoch, epochs):
 def select_dataset(dataset_name):
     dataset_name = dataset_name.lower()
     if dataset_name == 'cifar10':
-        return utils.create_pair_dataset(CIFAR10)
+        return CIFAR10
     if dataset_name == 'cifar100':
-        return utils.create_pair_dataset(CIFAR100)
+        return CIFAR100
     if dataset_name == 'stl10':
-        return utils.create_pair_dataset(STL10)
+        return STL10
     raise ValueError("Invalid dataset name")
 
 
