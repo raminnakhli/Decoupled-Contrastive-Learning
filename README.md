@@ -51,6 +51,14 @@ Below are the SimCLR results of the Resnet18 on the CIFAR10 dataset. The tempera
 | DCL           | 84.6          | 85.57         | 85.63          | 85.36          |
 | DCLW          | 83.32         | 82.68         | 83.5           | 82.7           |
 
+Below are the SimCLR results of the Resnet18 on the CIFAR100 dataset. The temperature is set to 0.1 and sigma to 0.5. The model is also trained for 100 epochs on SimCLR pretraining and 100 epochs on linear probing.
+
+| Loss          | 32 Batch Size | 64 Batch Size | 128 Batch Size | 256 Batch Size |
+| ------------- | ------------- | ------------- | -------------- | -------------- |
+| Cross Entropy | 52.2          | 57.76         | 58             | 59.6           |
+| DCL           | 60.1          | 60.33         | 61.73          | 61.92          |
+| DCLW          | 60.16         | 59.7          | 59.05          | 57.3           |
+
 ## Credits
 
 - The SimCLR implementation is taken from https://github.com/leftthomas/SimCLR.
