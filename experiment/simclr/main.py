@@ -4,7 +4,9 @@ import os
 import pandas as pd
 import torch
 import torch.optim as optim
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, dataset
+from torchvision.datasets.cifar import CIFAR10, CIFAR100
+from torchvision.datasets.stl10 import STL10
 from tqdm import tqdm
 
 from experiment.simclr import utils
@@ -99,6 +101,17 @@ def test(net, memory_data_loader, test_data_loader, args, epoch):
     return total_top1 / total_num * 100, total_top5 / total_num * 100
 
 
+def select_dataset(dataset_name):
+    dataset_name = dataset_name.lower()
+    if dataset_name == 'cifar10':
+        return utils.create_pair_dataset(CIFAR10)
+    if dataset_name == 'cifar100':
+        return utils.create_pair_dataset(CIFAR100)
+    if dataset_name == 'stl10':
+        return utils.create_pair_dataset(STL10)
+    raise ValueError("Invalid dataset name")
+
+
 def run_train():
     parser = argparse.ArgumentParser(description='Train SimCLR')
     parser.add_argument('--feature_dim', default=128, type=int, help='Feature dim for latent vector')
@@ -107,6 +120,7 @@ def run_train():
     parser.add_argument('--batch_size', default=512, type=int, help='Number of images in each mini-batch')
     parser.add_argument('--epochs', default=500, type=int, help='Number of sweeps over the dataset to train')
     parser.add_argument('--loss', default='ce', type=str, help='loss function')
+    parser.add_argument('--dataset', default='cifar10', type=str, help='dataset name: cifar10, cifar100, stl10')
 
     # args parse
     args = parser.parse_args()
@@ -114,12 +128,13 @@ def run_train():
     batch_size, epochs = args.batch_size, args.epochs
 
     # data prepare
-    train_data = utils.CIFAR10Pair(root='data', train=True, transform=utils.train_transform, download=True)
+    dataset_class = select_dataset(args.dataset)
+    train_data = dataset_class(root='data', train=True, transform=utils.train_transform, download=True)
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=16, pin_memory=True,
                               drop_last=True)
-    memory_data = utils.CIFAR10Pair(root='data', train=True, transform=utils.test_transform, download=True)
+    memory_data = dataset_class(root='data', train=True, transform=utils.test_transform, download=True)
     memory_loader = DataLoader(memory_data, batch_size=batch_size, shuffle=False, num_workers=16, pin_memory=True)
-    test_data = utils.CIFAR10Pair(root='data', train=False, transform=utils.test_transform, download=True)
+    test_data = dataset_class(root='data', train=False, transform=utils.test_transform, download=True)
     test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=16, pin_memory=True)
 
     # model setup and optimizer config

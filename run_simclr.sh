@@ -16,9 +16,11 @@ python train.py \
   --epochs 100 \
   --feature_dim 128 \
   --loss $LOSS \
-  --temperature $TEMP
+  --temperature $TEMP \
+  --dataset $DATASET
 
 python test.py \
   --batch_size 64 \
   --epochs 100 \
+  --dataset $DATASET \
   --model_path "results/128_${TEMP}_200_${BATCH_SIZE}_100_${LOSS}_model.pth"
